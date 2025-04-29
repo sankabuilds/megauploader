@@ -27,6 +27,12 @@ cd megauploader
 go build
 ```
 
+3. Install the application (optional):
+```bash
+go install
+```
+This will install the binary as `megauploader` to your `$GOPATH/bin` directory, making it available system-wide.
+
 ## Usage
 
 The tool requires three mandatory parameters:
@@ -38,13 +44,15 @@ The tool requires three mandatory parameters:
 
 Upload a single file:
 ```bash
-./megauploader -email your@email.com -password yourpassword -path /path/to/file.txt
+megauploader -email your@email.com -password yourpassword -path /path/to/file.txt
 ```
 
 Upload an entire directory:
 ```bash
-./megauploader -email your@email.com -password yourpassword -path /path/to/directory
+megauploader -email your@email.com -password yourpassword -path /path/to/directory
 ```
+
+Note: If you haven't installed the tool using `go install`, you'll need to use `./megauploader` instead of just `megauploader`.
 
 ## Security Note
 
