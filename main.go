@@ -7,8 +7,53 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/schollz/progressbar/v3"
+	"github.com/k0kubun/go-ansi"
 	"github.com/t3rm1n4l/go-mega"
 )
+
+func uploadFileWithProgress(m *mega.Mega, filePath string, parent *mega.Node) (*mega.Node, error) {
+	fileInfo, err := os.Stat(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get file info: %v", err)
+	}
+
+	// Create a progress bar
+	bar := progressbar.NewOptions64(
+		fileInfo.Size(),
+		progressbar.OptionSetWriter(ansi.NewAnsiStdout()),
+		progressbar.OptionSetWidth(15),
+		progressbar.OptionSetDescription(fmt.Sprintf("Uploading %s", filepath.Base(filePath))),
+		progressbar.OptionShowBytes(true),
+		progressbar.OptionShowCount(),
+		progressbar.OptionSetTheme(progressbar.Theme{
+			Saucer:        "=",
+			SaucerHead:    ">",
+			SaucerPadding: " ",
+			BarStart:      "[",
+			BarEnd:        "]",
+		}),
+	)
+
+	// Create a progress channel
+	progressChan := make(chan int)
+	go func() {
+		for progress := range progressChan {
+			bar.Add(progress)
+		}
+	}()
+
+	// Upload the file with progress tracking
+	node, err := m.UploadFile(filePath, parent, "", &progressChan)
+	if err != nil {
+		return nil, fmt.Errorf("failed to upload file: %v", err)
+	}
+
+	bar.Finish()
+	fmt.Println() 
+
+	return node, nil
+}
 
 func uploadDirectory(m *mega.Mega, localPath string, megaParent *mega.Node) error {
 	// Create folder in MEGA with the same name as the local directory
@@ -34,9 +79,8 @@ func uploadDirectory(m *mega.Mega, localPath string, megaParent *mega.Node) erro
 				return err
 			}
 		} else {
-			// Upload files
-			fmt.Printf("Uploading file: %s\n", fullPath)
-			_, err := m.UploadFile(fullPath, megaFolder, "", nil)
+			// Upload files with progress tracking
+			_, err := uploadFileWithProgress(m, fullPath, megaFolder)
 			if err != nil {
 				return fmt.Errorf("failed to upload file %s: %v", fullPath, err)
 			}
@@ -85,9 +129,8 @@ func main() {
 		}
 		fmt.Println("Directory uploaded successfully!")
 	} else {
-		// Upload single file
-		fmt.Printf("Uploading file: %s\n", *path)
-		node, err := m.UploadFile(*path, root, "", nil)
+		// Upload single file with progress tracking
+		node, err := uploadFileWithProgress(m, *path, root)
 		if err != nil {
 			log.Fatalf("Failed to upload file: %v", err)
 		}
