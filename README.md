@@ -14,6 +14,10 @@ A simple command-line tool to upload files and directories to MEGA cloud storage
 - Go 1.16 or higher
 - A MEGA account
 
+## Download Binaries
+
+You can download pre-built binaries for various platforms from the [Releases](https://github.com/sankabuilds/megauploader/releases) page.
+
 ## Installation
 
 1. Clone this repository:
