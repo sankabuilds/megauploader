@@ -1,4 +1,4 @@
-module megauploader
+module github.com/sankabuilds/megauploader
 
 go 1.23.4
 
