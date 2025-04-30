@@ -20,9 +20,17 @@ You can download pre-built binaries for various platforms from the [Releases](ht
 
 ## Installation
 
+### Method 1: Using go install (Recommended)
+The simplest way to install megauploader is using `go install`:
+```bash
+go install github.com/sankabuilds/megauploader@latest
+```
+This will install the binary as `megauploader` to your `$GOPATH/bin` directory, making it available system-wide.
+
+### Method 2: Manual Installation
 1. Clone this repository:
 ```bash
-git clone https://github.com/yourusername/megauploader.git
+git clone https://github.com/sankabuilds/megauploader.git
 cd megauploader
 ```
 
@@ -31,11 +39,13 @@ cd megauploader
 go build
 ```
 
-3. Install the application (optional):
+3. Install the application:
 ```bash
 go install
 ```
-This will install the binary as `megauploader` to your `$GOPATH/bin` directory, making it available system-wide.
+
+### Method 3: Download Binaries
+You can download pre-built binaries for various platforms from the [Releases](https://github.com/sankabuilds/megauploader/releases) page.
 
 ## Usage
 
